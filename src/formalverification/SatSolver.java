@@ -5,6 +5,7 @@
  */
 package formalverification;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,8 +20,11 @@ public class SatSolver {
         trueNode.terminalValue=true;
     }
     
-    public List<Variable> findSolution(List<List<Variable>> cnfInput){
-        
+    public List<Variable> findSolution(ArrayList<ArrayList<Variable>> cnfInput){
+        List<BDDNode> roots = new ArrayList();
+        for(List<Variable> ors:cnfInput){
+            roots.add(buildOrBdd(ors));
+        }
         return null;
     }
     

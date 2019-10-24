@@ -15,7 +15,8 @@ public class FormalVerification {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        SatSolver solver = new SatSolver();
+        solver.findSolution(DimacsParser.parse("res/simple_v3_c2.cnf"));
     }
     
 }
