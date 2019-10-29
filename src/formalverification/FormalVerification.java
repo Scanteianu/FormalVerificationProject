@@ -5,6 +5,8 @@
  */
 package formalverification;
 
+import java.util.List;
+
 /**
  *
  * @author danie
@@ -16,7 +18,16 @@ public class FormalVerification {
      */
     public static void main(String[] args) {
         SatSolver solver = new SatSolver();
-        solver.findSolution(DimacsParser.parse("res/simple_v3_c2.cnf"));
+        List<Variable> sol = solver.findSolution(DimacsParser.parse("res/simple_v3_c2.cnf"));
+        if(sol.isEmpty()){
+            System.out.println("No solution");
+        }
+        for(Variable var:sol){
+            if(!var.isTrue)
+                System.out.print("-");
+            System.out.print(var.number+",");
+        }
+        System.out.println();
     }
     
 }

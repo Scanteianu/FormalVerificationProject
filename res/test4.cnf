@@ -1,0 +1,8 @@
+c https://people.sc.fsu.edu/~jburkardt/data/cnf/simple_v3_c2.cnf
+c  contradiction
+c
+p cnf 2 2
+1 2 0
+-1 -2 0
+-1 2 0
+1 -2 0

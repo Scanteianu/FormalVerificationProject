@@ -29,12 +29,12 @@ public class DimacsParser {
                     ArrayList row = new ArrayList(tokens.length);
                     for(String token:tokens){
                         int num = Integer.parseInt(token);
-                        if(num==0)
-                            continue;
-                        Variable var = new Variable();
-                        var.isTrue=num>0;
-                        var.number=Math.abs(num);
-                        row.add(var);
+                        if(num!=0){
+                            Variable var = new Variable();
+                            var.isTrue=num>0;
+                            var.number=Math.abs(num);
+                            row.add(var);
+                        }
                     }
                     cnf.add(row);
                 }

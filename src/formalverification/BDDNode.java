@@ -36,4 +36,14 @@ public class BDDNode {
         return true;
         
     }
+    public String toString(){
+        return toString("");
+    }
+    public String toString(String whiteSpace){
+        if(terminalValue!=null){
+            return whiteSpace+terminalValue+"\n";
+        }
+        return whiteSpace+varNum+"\n"+leftChild.toString(whiteSpace+"  ")+rightChild.toString(whiteSpace+"  ");
+    }
+    
 }
