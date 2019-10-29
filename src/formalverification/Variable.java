@@ -20,4 +20,12 @@ public class Variable implements Comparable {
         }
         throw new IllegalArgumentException("Can't compare a variable with something else");
     }
+    @Override
+    public boolean equals(Object o){
+        if(!(o instanceof Variable)){
+            return false;
+        }
+        Variable v = (Variable)o;
+        return v.isTrue==isTrue && v.number==number;
+    }
 }

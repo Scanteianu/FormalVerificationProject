@@ -36,10 +36,26 @@ public class SatSolver {
         }
         setParentRefs(roots.get(0));
         System.out.println(roots.get(0).toString());
-        return getSolution();
+        List<Variable> solution = getSolution();
+        verifySolution(cnfInput,solution);
+        return solution;
     }
     
-    
+    public void verifySolution(ArrayList<ArrayList<Variable>> cnf,List<Variable> sol){
+        for(List<Variable> or:cnf){
+            boolean found=false;
+            if(!found){
+                for(Variable var: sol){
+                    if(or.contains(var)){
+                        found=true;
+                    }
+                }
+            }
+            if(!found)
+                throw new RuntimeException("failed to satisfy cnf.");
+            
+        }
+    }
     /*this really needs to be an array list*/
     public BDDNode buildOrBdd(List<Variable> orExpression){
         Collections.sort(orExpression);
