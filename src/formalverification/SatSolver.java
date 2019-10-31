@@ -5,10 +5,15 @@
  */
 package formalverification;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 
 /**
  *
@@ -17,6 +22,7 @@ import java.util.List;
 public class SatSolver {
     public BDDNode falseNode = new BDDNode();
     public BDDNode trueNode = new BDDNode();
+    Map<Entry<BDDNode,BDDNode>,BDDNode> dpTbl=new HashMap<>();
     public SatSolver(){
         falseNode.terminalValue=false;
         trueNode.terminalValue=true;
@@ -27,6 +33,7 @@ public class SatSolver {
         for(List<Variable> ors:cnfInput){
             roots.add(buildOrBdd(ors));
         }
+        
         while(roots.size()>1){
             BDDNode left = roots.get(0);
             BDDNode right = roots.get(1);
@@ -35,7 +42,7 @@ public class SatSolver {
             roots.add(bddAnd(left,right));
         }
         setParentRefs(roots.get(0));
-        System.out.println(roots.get(0).toString());
+        //System.out.println(roots.get(0).toString());
         List<Variable> solution = getSolution();
         verifySolution(cnfInput,solution);
         return solution;
@@ -92,13 +99,25 @@ public class SatSolver {
             prev.leftChild=trueNode;
             prev.rightChild=falseNode;
         }
+//        if(root!=null){
+//            root.recursiveHashCode();
+//        }
         return root;
     }
     public BDDNode bddAnd(BDDNode a, BDDNode b){
+        Entry<BDDNode,BDDNode>dpKey=new AbstractMap.SimpleEntry<>(a,b);
+        if(dpTbl.containsKey(dpKey)){
+            return dpTbl.get(dpKey);
+        }
+        BDDNode result=bddAndImpl(a,b);
+        dpTbl.put(dpKey,result);
+        return result;
+    }
+    public BDDNode bddAndImpl(BDDNode a, BDDNode b){
         //base case
-        System.out.println("inputs:");
-        System.out.println(a.toString());
-        System.out.println(b.toString());
+//        System.out.println("inputs:");
+//        System.out.println(a.toString());
+//        System.out.println(b.toString());
         if(a.terminalValue!=null && b.terminalValue!=null){
             if(a.terminalValue&&b.terminalValue)
                 return trueNode;
@@ -140,9 +159,9 @@ public class SatSolver {
         BDDNode returnNode = new BDDNode();
         BDDNode leftChild = bddAnd(a.leftChild,b.leftChild);
         BDDNode rightChild = bddAnd(a.rightChild,b.rightChild);
-        System.out.println("recursion return:");
-        System.out.println(leftChild.toString());
-        System.out.println(rightChild.toString());
+//        System.out.println("recursion return:");
+//        System.out.println(leftChild.toString());
+//        System.out.println(rightChild.toString());
         if(leftChild.equals(rightChild)){
             return leftChild;
         }

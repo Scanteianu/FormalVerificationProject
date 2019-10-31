@@ -24,10 +24,12 @@ public class DimacsParser {
             Scanner sc = new Scanner(new File(filename));
             while(sc.hasNextLine()){
                 line=sc.nextLine();
-                if(!line.startsWith("p")&&!line.startsWith("c")){
+                if(!line.startsWith("p")&&!line.startsWith("c")&&!line.isBlank()){
                     String[] tokens = line.split(" ");
                     ArrayList row = new ArrayList(tokens.length);
                     for(String token:tokens){
+                        if(token.isBlank())
+                            continue;
                         int num = Integer.parseInt(token);
                         if(num!=0){
                             Variable var = new Variable();
