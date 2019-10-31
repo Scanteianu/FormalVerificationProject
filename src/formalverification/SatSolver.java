@@ -44,7 +44,8 @@ public class SatSolver {
         setParentRefs(roots.get(0));
         //System.out.println(roots.get(0).toString());
         List<Variable> solution = getSolution();
-        verifySolution(cnfInput,solution);
+        if(solution.size()>0)
+            verifySolution(cnfInput,solution);
         return solution;
     }
     

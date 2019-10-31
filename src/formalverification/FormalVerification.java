@@ -18,7 +18,7 @@ public class FormalVerification {
      */
     public static void main(String[] args) {
         SatSolver solver = new SatSolver();
-        List<Variable> sol = solver.findSolution(DimacsParser.parse("res/quinn.cnf"));
+        List<Variable> sol = solver.findSolution(DimacsParser.parse("res/hole6.cnf"));
         if(sol.isEmpty()){
             System.out.println("No solution");
         }
