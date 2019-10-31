@@ -11,7 +11,6 @@ package formalverification;
  */
 public class BDDNode {
     public int varNum;
-    public int customHashCode;
     public BDDNode leftChild;
     public BDDNode rightChild;
     public BDDNode parentNode;//todo: second traversal to set this thing?
@@ -45,26 +44,6 @@ public class BDDNode {
             return whiteSpace+terminalValue+"\n";
         }
         return whiteSpace+varNum+"\n"+leftChild.toString(whiteSpace+"  ")+rightChild.toString(whiteSpace+"  ");
-    }
-    public void recursiveHashCode(){
-        if(terminalValue!=null){
-            computeHashCode();
-            return;
-        }
-        leftChild.recursiveHashCode();
-        rightChild.recursiveHashCode();
-        computeHashCode();
-    }
-    public void computeHashCode(){
-        if(terminalValue!=null){
-            if(terminalValue)
-                customHashCode=1;
-            else{
-                customHashCode=0;
-            }
-        }
-        customHashCode+=7*varNum;
-        customHashCode+=31*leftChild.customHashCode+19*rightChild.customHashCode;
     }
     
 }
