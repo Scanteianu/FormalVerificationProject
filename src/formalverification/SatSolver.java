@@ -100,9 +100,6 @@ public class SatSolver {
             prev.leftChild=trueNode;
             prev.rightChild=falseNode;
         }
-//        if(root!=null){
-//            root.recursiveHashCode();
-//        }
         return root;
     }
     public BDDNode bddAnd(BDDNode a, BDDNode b){
