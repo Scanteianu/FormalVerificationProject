@@ -1,0 +1,69 @@
+a->b->c->d
+f->e->c->d
+
+d if (c-1)
+c is reachable if it is reachable or its parents are reachable:
+c if (b or e) == (c-1 or b-1) and (c-1 or e-1) //somehow, one of these clauses 
+					semantically - if you can get to c in some other way, or if you can get to it
+c's descendants are reachable if c is reachable (same problem)
+
+Refs:
+OG unrolling
+http://www.cs.cmu.edu/~emc/papers/Books%20and%20Edited%20Volumes/Bounded%20Model%20Checking.pdf
+without unrolling
+https://s3.amazonaws.com/academia.edu.documents/39846809/SAT-Based_Model_Checking_without_Unrolli20151109-1286-o6dd8v.pdf?response-content-disposition=inline%3B%20filename%3DSAT-Based_Model_Checking_without_Unrolli.pdf&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWOWYYGZ2Y53UL3A%2F20191211%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20191211T140012Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=b5ebd65b64e7b4f2ae2b163da8dfc200daee1caffbf39d0506857d2160da7cda
+transition relation simplification:
+https://www.cs.york.ac.uk/rts/docs/SIGDA-Compendium-1994-2004/papers/2004/iccad04/pdffiles/01c_2.pdf
+prolog
+http://fmv.jku.at/biere/talks/Biere-SATSMTAR18-talk.pdf
+sat and smt
+https://www.cs.rochester.edu/u/kautz/papers/ijcai07-numeric-rev.pdf
+circuitsat sat floyd warshall
+https://www.csie.ntu.edu.tw/~lyuu/complexity/2008a/20080327.pdf
+
+simple algo:
+bad state is reachable if its parents are reachable (or clause)
+unrolling one - bad state is reachable if an or of its parents are reachable, and an or of their parents is reachable (edge-list represent)
+ --this is a bfs-ish thing, replace state 0 variables with false unless init state
+		due to implication, each list of variables has to be unfolded to init state, maybe?
+2-sat: http://web.csulb.edu/~tebert/teaching/lectures/528/sat/sat.pdf
+
+a is reachable (true).
+is d reachable?
+b is reachable if there is an edge from a to b and a is reachable or if there is an edge from c to b and c is reachable
+var is reachable in state: OR_forallneighbor(and(neighborReachable-1 AND edge)).
+
+look at the graph:
+there is a clause for every node and every other node:
+
+a is reachable from b in step 2 if
+	there is an  
+	
+how to turn biconditional into cnf? 
+https://www.cs.jhu.edu/~jason/tutorials/convert-to-CNF.html
+a is reachable in step 3 if edge from b to a and b if reachable in 2
+p implies q is equivalent to (p or not q) 
+biconditional for Var assignment: (bingo?)
+(p or not q) AND (q or not p)
+
+steps:
+
+for all edges, generate:
+	reachable(source-1) implies dest
+	
+final clause:
+	initstate0 or initstate 1 or initstate 2
+	AND
+	badstate0 or badstate 1 or badstate2 or badstate 3
+	AND
+	not State or Parent1 or parent 2 or ... parentN
+	
+a -> b
+b or not a
+
+we also need to assert that node is reachable iff one of its ancestors was reachable
+ie: c2 <-> a1 or b1
+or not a and not b implies not c
+seems this is equivalent to a2 or b2 or c3
+nvm. we already do this.
+__need way to say nodes with no indegree are not reachable.__
