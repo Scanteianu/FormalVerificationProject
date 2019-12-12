@@ -16,24 +16,24 @@ unrolledEdges=[]
 adjList=[]
 revAdjList=[]
 cnf=[]
-numIter=3
+numIter=int(sys.argv[2])
 nodeNum=-1
 with open(sys.argv[1],"r") as reach:
 	for row in reach:
 		if(nodeNum==-1):
 			nodeNum=int(row.split(" ")[0])
-			numIter=int(row.split(" ")[1])
+			#numIter=int(row.split(" ")[1])
 		#print(row)
 		else:
 			edgeStr=row.split(" ")
 			edges.append((int(edgeStr[0]),int(edgeStr[1])))
-for edge in edges:
-	print(edge)
+# for edge in edges:
+	# print(edge)
 revEdge=[(y,x)for(x,y) in edges]
 #build adj list
 buildAdjList(adjList,edges,nodeNum)
 buildAdjList(revAdjList,revEdge,nodeNum)
-print(adjList)
+#print(adjList)
 print(revAdjList)
 #unroll
 startClause=[]
@@ -51,19 +51,22 @@ for i in range(0,numIter):
 			for src in revAdjList[j]:
 				clause.append((i*nodeNum)+src)
 			cnf.append(clause)
-		if((j>0 or i>0) and revAdjList[j]==[]):
+		if(revAdjList[j]==[]):
 			#unreachable
-			print("unreach: "+str(j))
+			#print("unreach: "+str(j))
 			cnf.append([-1*(j+(i+1)*nodeNum)])
 	badClause.append(((i+1)*nodeNum)+1)
+#no initial states other than the 
 for i in range(1, nodeNum):
 	cnf.append([-1*i])
 cnf.append(badClause) #the bad state
+cnf.append([0]) #the start state must be reached
 #remove unused variables
 varToReduced={}
 reducedCnf=[]
 for clause in cnf:
-	print(clause)
+	if(len(cnf)<100):
+		print(clause)
 	reducedClause=[]
 	for var in clause:
 		if (abs(var) not in varToReduced):
@@ -105,6 +108,7 @@ with open("miniout.txt", "r") as miniout:
 					path.sort()
 					
 if(path!=[]):
+	print(path)
 	print([i %nodeNum for i in path])
 # print("\n\n\n\nunrolled\n\n\n")
 # for edge in unrolledEdges:

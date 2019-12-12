@@ -20,6 +20,8 @@ sat and smt
 https://www.cs.rochester.edu/u/kautz/papers/ijcai07-numeric-rev.pdf
 circuitsat sat floyd warshall
 https://www.csie.ntu.edu.tw/~lyuu/complexity/2008a/20080327.pdf
+reminder for if equivalence
+http://www.cs.mun.ca/~kol/courses/2742-f09/studysheet-t1.pdf
 
 simple algo:
 bad state is reachable if its parents are reachable (or clause)
