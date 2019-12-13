@@ -27,8 +27,9 @@ with open(sys.argv[1],"r") as reach:
 		else:
 			edgeStr=row.split(" ")
 			edges.append((int(edgeStr[0]),int(edgeStr[1])))
-# for edge in edges:
-	# print(edge)
+if(len(edges)<20):
+	for edge in edges:
+		print(edge)
 revEdge=[(y,x)for(x,y) in edges]
 #build adj list
 buildAdjList(adjList,edges,nodeNum)
