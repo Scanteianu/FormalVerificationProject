@@ -18,9 +18,9 @@ import org.junit.Test;
  *
  * @author danie
  */
-public class SatSolverTest {
+public class BDDSatSolverTest {
     
-    public SatSolverTest() {
+    public BDDSatSolverTest() {
     }
     
     @BeforeClass
@@ -56,7 +56,7 @@ public class SatSolverTest {
         cv.number=2;
         
         List<Variable> orExpression = new ArrayList(3);
-        SatSolver ss = new SatSolver();
+        BDDSatSolver ss = new BDDSatSolver();
         orExpression.add(av);
         orExpression.add(bv);
         orExpression.add(cv);

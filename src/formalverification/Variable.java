@@ -28,4 +28,11 @@ public class Variable implements Comparable {
         Variable v = (Variable)o;
         return v.isTrue==isTrue && v.number==number;
     }
+    @Override
+    public Variable clone(){
+       Variable v = new Variable();
+       v.isTrue=isTrue;
+       v.number=number;
+       return v;
+    }
 }
