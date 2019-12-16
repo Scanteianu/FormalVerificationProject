@@ -13,6 +13,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.HashSet;
 
 
 /**
@@ -34,6 +36,28 @@ public class BDDSatSolver extends SatSolver {
     }
     @Override
     public List<Variable> findSolution(ArrayList<ArrayList<Variable>> cnfInput){
+        List<Variable> realSolution=findSolutionHelp(cnfInput);
+        //assign unassigned variables
+        Set<Integer> vars = new HashSet();
+        for(ArrayList<Variable> clause:cnfInput){
+            for(Variable var: clause){
+                vars.add(var.number);
+            }
+        }
+        for(Variable var: realSolution){
+            if(vars.contains(var.number))
+                vars.remove(var.number);
+        }
+        for(Integer i: vars){
+            Variable v = new Variable();
+            v.number=i;
+            v.isTrue=true;
+            realSolution.add(v);
+        }
+        Collections.sort(realSolution);
+        return realSolution;
+    }
+    public List<Variable> findSolutionHelp(ArrayList<ArrayList<Variable>> cnfInput){
         List<BDDNode> roots = new ArrayList();
         for(List<Variable> ors:cnfInput){
             roots.add(buildOrBdd(ors));

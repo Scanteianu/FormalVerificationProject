@@ -20,9 +20,10 @@ public class FormalVerification {
     public static void main(String[] args) {
         BDDSatSolver bddsolver = new BDDSatSolver();
         SimpleDPLLSolver dpllsolver = new SimpleDPLLSolver();
-        ArrayList<ArrayList<Variable>> dimacsInput=DimacsParser.parse("res/par.cnf");
-        solve(bddsolver,SatSolver.cloneCnf(dimacsInput));
+        ArrayList<ArrayList<Variable>> dimacsInput=DimacsParser.parse("res/reach3.cnf");
         solve(dpllsolver,SatSolver.cloneCnf(dimacsInput));
+        solve(bddsolver,SatSolver.cloneCnf(dimacsInput));
+        
 
     }
     static long solve(SatSolver solver, ArrayList<ArrayList<Variable>> dimacsInput){

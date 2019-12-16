@@ -1,0 +1,3 @@
+
+http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.19.6391&rep=rep1&type=pdf 
+paper that talks about conversion to cnf

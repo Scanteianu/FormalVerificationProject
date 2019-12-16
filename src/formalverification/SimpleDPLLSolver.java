@@ -22,8 +22,7 @@ public class SimpleDPLLSolver extends SatSolver {
     public String getName(){
         return  "DPLL";
     }
-    //todo1: smart varchoice
-    //todo2: split
+    //todo: splitting thing
     @Override
     public List<Variable> findSolution(ArrayList<ArrayList<Variable>> cnfInput){
         List<Variable> realSolution=findSolutionHelp(cnfInput);
@@ -44,6 +43,7 @@ public class SimpleDPLLSolver extends SatSolver {
             v.isTrue=true;
             realSolution.add(v);
         }
+        Collections.sort(realSolution);
         return realSolution;
     }
     public List<Variable> findSolutionHelp(ArrayList<ArrayList<Variable>> cnfInput) {
@@ -70,14 +70,16 @@ public class SimpleDPLLSolver extends SatSolver {
             return solution;
         }
         int nextAssignment = pickNextAssignment(updatedInput);
+        boolean flip=nextAssignment<0;
+        nextAssignment=Math.abs(nextAssignment);
         //try true
-        List<Variable> subSol = trySubSat(updatedInput,nextAssignment,true,currentStepAssignments);
+        List<Variable> subSol = trySubSat(updatedInput,nextAssignment,true^flip ,currentStepAssignments);
         if(!subSol.isEmpty()){
             solution.addAll(subSol);
             updateSolution(solution,currentStepAssignments);
         }
         //try false
-        subSol = trySubSat(updatedInput,nextAssignment,false,currentStepAssignments);
+        subSol = trySubSat(updatedInput,nextAssignment,false^flip,currentStepAssignments);
         if(!subSol.isEmpty()){
             solution.addAll(subSol);
             updateSolution(solution,currentStepAssignments);
@@ -102,7 +104,38 @@ public class SimpleDPLLSolver extends SatSolver {
         return subSol;
     }
     int pickNextAssignment(ArrayList<ArrayList<Variable>> input){
-        return input.get(0).get(0).number;
+        int maxOverall=-1;
+        int maxCountOverall=-1;
+        int maxBinary=-1;
+        int maxCountBinary=-1;
+        HashMap<Integer,Integer> countOverall = new HashMap<>();
+        HashMap<Integer,Integer> countBinary = new HashMap<>();
+        for(ArrayList<Variable> clause : input){
+            for(Variable var:clause){
+                if(!countOverall.containsKey(var.number)){
+                    countOverall.put(var.number, 0);
+                }
+                countOverall.put(var.number,countOverall.get(var.number)+1);
+                if(maxCountOverall<countOverall.get(var.number)){
+                    maxOverall=var.number;
+                    maxCountOverall=countOverall.get(var.number);
+                }
+                if(clause.size()==2){
+                    if(!countBinary.containsKey(var.number)){
+                        countBinary.put(var.number, 0);
+                    }
+                    countBinary.put(var.number,countBinary.get(var.number)+1);
+                    if(maxCountBinary<countBinary.get(var.number)){
+                        maxBinary=var.number;
+                        maxCountBinary=countOverall.get(var.number);
+                    }
+                }
+            }
+        }
+        if(maxCountBinary>0){
+            return -1*maxBinary;
+        }
+        return maxOverall;
     }
     
     ArrayList<ArrayList<Variable>> applyAssignments(ArrayList<ArrayList<Variable>> input, HashMap<Integer,Boolean> currentAssignments){
