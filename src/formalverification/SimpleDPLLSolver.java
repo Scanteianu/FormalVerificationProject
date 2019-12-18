@@ -71,19 +71,26 @@ public class SimpleDPLLSolver extends SatSolver {
         }
         int nextAssignment = pickNextAssignment(updatedInput);
         boolean flip=nextAssignment<0;
-        nextAssignment=Math.abs(nextAssignment);
+        if(flip){
+            nextAssignment=Math.abs(nextAssignment);
         //try true
-        List<Variable> subSol = trySubSat(updatedInput,nextAssignment,true^flip ,currentStepAssignments);
-        if(!subSol.isEmpty()){
-            solution.addAll(subSol);
-            updateSolution(solution,currentStepAssignments);
+            List<Variable> subSol = trySubSat(updatedInput,nextAssignment,true^flip,currentStepAssignments);
+            if(!subSol.isEmpty()){
+                solution.addAll(subSol);
+                updateSolution(solution,currentStepAssignments);
+            }
+            //try false
+            subSol = trySubSat(updatedInput,nextAssignment,false^flip,currentStepAssignments);
+            if(!subSol.isEmpty()){
+                solution.addAll(subSol);
+                updateSolution(solution,currentStepAssignments);
+            }
         }
-        //try false
-        subSol = trySubSat(updatedInput,nextAssignment,false^flip,currentStepAssignments);
-        if(!subSol.isEmpty()){
-            solution.addAll(subSol);
-            updateSolution(solution,currentStepAssignments);
+        else{
+            return splitSubSat(updatedInput,nextAssignment, currentStepAssignments);
+            
         }
+        
     
         return Collections.emptyList();
     }
@@ -102,6 +109,54 @@ public class SimpleDPLLSolver extends SatSolver {
         applyAssignments(nextInput,currentStepAssignments);
         List<Variable> subSol=findSolutionHelp(nextInput);
         return subSol;
+    }
+    /**
+     * precondition: there are no tautologies in cnf input (although this may not matter)
+     * 
+     * @param cnfInput
+     * @param nextAssignment
+     * @param currentStepAssignments
+     * @return 
+     */
+    List<Variable> splitSubSat(ArrayList<ArrayList<Variable>> cnfInput,int nextAssignment, HashMap<Integer,Boolean> currentStepAssignments){
+        ArrayList<ArrayList<Variable>> positive = new ArrayList<>(cnfInput.size());
+        ArrayList<ArrayList<Variable>> negative = new ArrayList<>(cnfInput.size());
+        for(ArrayList<Variable> clause: cnfInput){
+            boolean added=false;
+            for(Variable v: clause){
+                if(v.number==nextAssignment){
+                    if(v.isTrue){
+                        positive.add(clause);
+                        added=true;
+                        break;
+                    }
+                    else{
+                        negative.add(clause);
+                        added=true;
+                        break;
+                    }
+                }
+            }
+            if(!added){
+                positive.add(clause);
+                negative.add(clause);
+            }
+        }
+        Variable solVar = new Variable();
+        solVar.number=nextAssignment;
+        List<Variable> positiveSolution = trySubSat(positive, nextAssignment, false,currentStepAssignments);
+        if(!positiveSolution.isEmpty()){
+            solVar.isTrue=false;
+            positiveSolution.add(solVar);
+            return positiveSolution;
+        }
+        List<Variable> negativeSolution = trySubSat(negative, nextAssignment, true,currentStepAssignments);
+        if(!negativeSolution.isEmpty()){
+            solVar.isTrue=true;
+            negativeSolution.add(solVar);
+            return negativeSolution;
+        }
+        return Collections.emptyList();
     }
     int pickNextAssignment(ArrayList<ArrayList<Variable>> input){
         int maxOverall=-1;
