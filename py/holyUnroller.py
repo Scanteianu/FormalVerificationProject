@@ -1,5 +1,5 @@
 #usage: python3 holyUnroller.py <inputFile(ie: reach3.txt)> <number of unrollings (ie: 10)>; requires minisat imported
-#this was named after the holy roller in the Beatles song "Get Back"
+#this was named after the holy roller in the Beatles song "Come Together"
 import os
 import sys
 count=0
